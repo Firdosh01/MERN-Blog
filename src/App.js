@@ -7,10 +7,13 @@ import SignIn from './page/SignIn';
 import SignUp from './page/SignUp';
 import Dashboard from './page/Dashboard';
 import Projects from './page/Projects';
+import Header from './components/Header';
+import Contact from './page/Contact';
 
 function App() {
   return (
     <div>
+      <Header/>
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/about' element={<About />} />
@@ -18,6 +21,7 @@ function App() {
         <Route path='/sign-up' element={<SignUp />} />
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path='/projects' element={<Projects />} />
+        <Route path='/contact' element={<Contact />} />
       </Routes>
     </div>
   );
