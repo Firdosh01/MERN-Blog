@@ -9,7 +9,7 @@ export default function SignUp() {
   const [errorMessage, setErrorMessage] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const BASE_URL = process.env.REACT_APP_BASE_URL
+  const BASE_URL = process.env.REACT_APP_BASE_URL;
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
