@@ -8,10 +8,11 @@ import {
   signInFailure,
 } from '../redux/user/userSlice';
 import toast from 'react-hot-toast';
+import OAuth from '../components/OAuth';
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-const { loading, error: errorMessage } = useSelector((state) => state.user);
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const BASE_URL = process.env.REACT_APP_BASE_URL;
@@ -95,6 +96,7 @@ const { loading, error: errorMessage } = useSelector((state) => state.user);
               'Sign In'
             )}
           </Button>
+          <OAuth />
         </form>
         <div className='flex gap-2 mt-5 text-sm'>
           <span>Dont Have an account?</span>
