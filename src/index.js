@@ -8,14 +8,17 @@ import { store,persistor  } from './redux/store.js';
 import { Provider } from 'react-redux';
 import { Toaster } from 'react-hot-toast';
 import { PersistGate } from 'redux-persist/integration/react';
+import ThemeProvider from './components/ThemeProvider.jsx';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <PersistGate persistor={persistor}>
   <Provider store={store}>
     <BrowserRouter>
-        <App />
-        <Toaster />
+        <ThemeProvider>
+          <App />
+          <Toaster />
+        </ThemeProvider>
     </BrowserRouter>
   </Provider>
   </PersistGate>
