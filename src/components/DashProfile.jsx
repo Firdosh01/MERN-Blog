@@ -1,16 +1,18 @@
-import { Button, TextInput } from "flowbite-react";
+import { Alert, Button, TextInput } from "flowbite-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 // import getStorage from "redux-persist/es/storage/getStorage";
 import { app } from '../firebase'
 import {getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 
 export default function DashProfile() {
   const { currentUser } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null)
   const [imageFileUrl, setImageFileUrl] = useState(null)
   const filePictureRef = useRef()
-  const [imgFileUploadProgress, setImgFileUploadProgress] = useState(0)
+  const [imgFileUploadProgress, setImgFileUploadProgress] = useState(null)
   const [imgFileUploadError, setImgFileUploadError] = useState(null)
   console.log(imgFileUploadProgress, imgFileUploadError )
 
@@ -39,6 +41,7 @@ export default function DashProfile() {
     //     }
     //   }
     // }
+    setImgFileUploadError(null)
     const storage = getStorage(app)
     const fileName = new Date().getTime() + imageFile.name;
     const storageRef = ref(storage, fileName)
@@ -53,6 +56,9 @@ export default function DashProfile() {
       },
       (error) => {
         setImgFileUploadError('Could not upload image (File must be less then 2MB)')
+        setImgFileUploadProgress(null)
+        setImageFile(null)
+        setImageFileUrl(null)
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
@@ -69,13 +75,40 @@ export default function DashProfile() {
       <h1 className="font-semibold text-center my-7">Profile</h1>
       <form className="flex flex-col gap-4">
         <input type="file" accept="image/*" onChange={handleImgChange} ref={filePictureRef} className="hidden" />
-        <div className="self-center w-32 h-32 overflow-hidden shadow-md cursor-pointer" onClick={() => filePictureRef.current.click()}>
+        <div className="relative self-center w-32 h-32 overflow-hidden cursor-pointer" onClick={() => filePictureRef.current.click()}>
+        
+          {imgFileUploadProgress  && (
+            <CircularProgressbar 
+            value={imgFileUploadProgress || 0 } 
+            text={`${imgFileUploadProgress}%`}  
+            strokeWidth={5}
+            styles={{
+              root: {
+                height: '100%',
+                width: '100%',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+              },
+              path: {
+                stroke: `rgba(62, 152, 199, ${imgFileUploadProgress / 100})`,
+              }
+            }}
+            />
+          )}
+          
           <img
             src={imageFileUrl || currentUser.profilePicture}
             alt="user"
-            className="w-full h-full border-4 rounded-full border-[lightGray] object-cover select-none"
+            className={`w-full h-full border-4 rounded-full border-[lightGray] object-cover select-none ${imgFileUploadProgress && imgFileUploadProgress < 100 &&  'opacity-60'}`}
           />
         </div>
+        {imgFileUploadError &&  (
+        <Alert color="failure">
+          {imgFileUploadError}
+        </Alert>          
+        )}
+
          <TextInput type="text" id="username" placeholder="username" defaultValue={currentUser.username} />
          <TextInput type="text" id="email" placeholder="email" defaultValue={currentUser.email} />
          <TextInput type="password" id="password" placeholder="password" />
