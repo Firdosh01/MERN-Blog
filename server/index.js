@@ -3,9 +3,14 @@ import mongoose from "mongoose";
 import dotenv from 'dotenv';
 import userRoutes from './routes/User.js'
 import authRoutes from './routes/Auth.js'
+import cookieParser from "cookie-parser";
 import cors from "cors";
+
+
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
+
 dotenv.config();
 const PORT = 4000;
 
